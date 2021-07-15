@@ -1,26 +1,36 @@
-Caddy Distribution Resources
-============================
+Caddy安装
+[官网](https://caddyserver.com/)
+# 安装Centos7.5
+```
+yum install yum-plugin-copr
+yum copr enable @caddy/caddy
+yum install caddy
+```
+# 服务文件
+```
+# caddy.service
+[Unit]
+Description=Caddy
+After=network.target network-online.target
+Requires=network-online.target
 
-This repository contains official resources for packaging and distributing [Caddy](https://github.com/caddyserver/caddy).
+[Service]
+Type=notify
+ExecStart=/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile
+ExecReload=/usr/bin/caddy reload --config /etc/caddy/Caddyfile
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+ProtectSystem=full
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
-Note that packages or distributions which _use_ these resources are not necessarily endorsed by the Caddy project (but the ones listed below are).
+[Install]
+WantedBy=multi-user.target
+```
 
-## List of official Caddy distributions
+# 配置文件
+```
+config/Caddyconfig
 
-These distributions are endorsed and maintained by the Caddy project:
-
-- [GitHub releases](https://github.com/caddyserver/caddy/releases)
-- [Docker](https://hub.docker.com/_/caddy)
-- [Fedora COPR](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/)
-- [Debian](https://gemfury.com/caddy/deb:caddy)
-- [DigitalOcean](https://marketplace.digitalocean.com/apps/caddy)
-
-
-## Installing Caddy
-
-For instructions on installing Caddy, please see [our installation guide](https://caddyserver.com/docs/install).
-
-
-## We need help with packaging
-
-Do you have experience packaging Go programs for any platforms? Please reach out to us in an issue, we'd love your help!
+```
